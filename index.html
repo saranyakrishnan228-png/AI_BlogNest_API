@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Blognest</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>AI Blognest</h1>
+        <p>Generate blogs using AI</p>
+
+        <input
+            type="text"
+            id="topic"
+            placeholder="Enter your blog topic"
+        >
+
+        <button onclick="generateBlog()">
+            Generate Blog
+        </button>
+
+        <div id="result"></div>
+
+    </div>
+
+<script>
+
+async function generateBlog() {
+
+    const topic = document.getElementById("topic").value;
+    const result = document.getElementById("result");
+
+    if (topic === "") {
+        result.innerHTML = "Please enter a topic";
+        return;
+    }
+
+    result.innerHTML = "Generating...";
+
+    const response = await fetch("/generate", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+            topic: topic
+        })
+
+    });
+
+    const data = await response.json();
+
+    if (data.blog) {
+        result.innerHTML =
+            "<h2>Generated Blog</h2>" +
+            "<p>" + data.blog.replace(/\n/g, "<br>") + "</p>";
+    }
+    else {
+        result.innerHTML = "Error generating blog";
+    }
+}
+
+</script>
+
+</body>
+</html>
